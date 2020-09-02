@@ -27,7 +27,7 @@ import java.io.Serializable;
  * @created 2020/06/16
  * @project jgea
  */
-public class Event<G, S, F extends Comparable<F>> implements Serializable {
+public class Event<G, S, F> implements Serializable {
 
   private final Evolver.State state;
   private final PartiallyOrderedCollection<Individual<G, S, F>> orderedPopulation;

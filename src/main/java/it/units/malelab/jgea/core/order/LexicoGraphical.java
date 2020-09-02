@@ -19,9 +19,11 @@ package it.units.malelab.jgea.core.order;
 import java.util.List;
 
 /**
- * Perform lexicographic partial compare.
+ * @author eric
+ * @created 2020/06/17
+ * @project jgea
  */
-public class LexicoGraphical <K extends Comparable<K>> implements PartialComparator<List<K>> {
+public class LexicoGraphical implements PartialComparator<List<? extends Comparable<?>>> {
 
   private final int[] order;
 
@@ -30,13 +32,13 @@ public class LexicoGraphical <K extends Comparable<K>> implements PartialCompara
   }
 
   @Override
-  public PartialComparatorOutcome compare(List<K> k1, List<K> k2) {
+  public PartialComparatorOutcome compare(List<? extends Comparable<?>> k1, List<? extends Comparable<?>> k2) {
     if (k1.size() != k2.size()) {
       return PartialComparatorOutcome.NOT_COMPARABLE;
     }
     for (int i : order) {
-      K o1 = k1.get(i);
-      K o2 = k2.get(i);
+      Comparable o1 = k1.get(i);
+      Comparable o2 = k2.get(i);
       int outcome = o1.compareTo(o2);
       if (outcome < 0) {
         return PartialComparatorOutcome.BEFORE;
@@ -47,6 +49,4 @@ public class LexicoGraphical <K extends Comparable<K>> implements PartialCompara
     }
     return PartialComparatorOutcome.SAME;
   }
-
-
 }

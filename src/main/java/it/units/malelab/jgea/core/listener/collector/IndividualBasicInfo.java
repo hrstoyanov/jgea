@@ -30,7 +30,7 @@ import java.util.function.Function;
 /**
  * @author Eric Medvet <eric.medvet@gmail.com>
  */
-public class IndividualBasicInfo<F> implements Function<Individual<? extends Object, ? extends Object, ? extends Comparable<F>>, List<Item>> {
+public class IndividualBasicInfo<F> implements Function<Individual<? extends Object, ? extends Object, ? extends F>, List<Item>> {
 
   private final Function<? super F, List<Item>> fitnessSplitter;
 
