@@ -24,7 +24,7 @@ import java.util.function.Function;
 /**
  * @author eric
  */
-public class Individual<G, S, F> implements Serializable {
+public class Individual<G, S, F extends Comparable<F>> implements Serializable {
 
   private final G genotype;
   private final S solution;
