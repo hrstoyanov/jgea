@@ -24,21 +24,21 @@ import java.util.stream.Collectors;
 /**
  * @author eric
  */
-public class Prefix<G, S, F> implements DataCollector<G, S, F> {
+public class Prefix<G, S, F extends Comparable<? super F>> implements DataCollector<G, S, F> {
 
-  private final String prefix;
-  private final DataCollector<G, S, F> collector;
+    private final String prefix;
+    private final DataCollector<G, S, F> collector;
 
-  public Prefix(String prefix, DataCollector<G, S, F> collector) {
-    this.prefix = prefix;
-    this.collector = collector;
-  }
+    public Prefix(String prefix, DataCollector<G, S, F> collector) {
+        this.prefix = prefix;
+        this.collector = collector;
+    }
 
-  @Override
-  public List<Item> collect(Event<? extends G, ? extends S, ? extends F> event) {
-    return collector.collect(event).stream()
-        .map(i -> i.prefixed(prefix))
-        .collect(Collectors.toList());
-  }
+    @Override
+    public List<Item> collect(Event<G, S, F> event) {
+        return collector.collect(event).stream()
+                .map(i -> i.prefixed(prefix))
+                .collect(Collectors.toList());
+    }
 
 }

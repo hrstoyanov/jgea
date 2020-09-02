@@ -30,17 +30,17 @@ import java.util.function.Predicate;
 /**
  * @author eric
  */
-public interface Evolver<G, S, F> {
+public interface Evolver<G, S, F extends Comparable<? super F>> {
 
-  Collection<S> solve(
-      Function<S, F> fitnessFunction,
-      Predicate<? super Event<G, S, F>> stopCondition,
-      Random random,
-      ExecutorService executor,
-      Listener<? super G, ? super S, ? super F> listener) throws InterruptedException, ExecutionException;
+    Collection<S> solve(
+            Function<S, F> fitnessFunction,
+            Predicate<? super Event<G, S, F>> stopCondition,
+            Random random,
+            ExecutorService executor,
+            Listener<G, S, F> listener) throws InterruptedException, ExecutionException;
 
-  class State implements Serializable {
-    private int iterations = 0;
+    class State implements Serializable {
+        private int iterations = 0;
     private int births = 0;
     private int fitnessEvaluations = 0;
     private long elapsedMillis = 0;

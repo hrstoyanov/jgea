@@ -16,25 +16,24 @@
 
 package it.units.malelab.jgea.core.listener.collector;
 
-import it.units.malelab.jgea.core.Individual;
-
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author eric
  */
-public class BestPrinter extends FunctionOfOneBest<Object, Object, Object> {
+public class BestPrinter extends FunctionOfOneBest<Object, Object, Comparable<Object>> {
 
-  public enum Part {
-    GENOTYPE, SOLUTION
-  }
+    public enum Part {
+        GENOTYPE, SOLUTION
+    }
 
-  public BestPrinter(Map<Part, String> parts) {
-    super(individual -> {
-      List<Item> items = new ArrayList<>();
-      if (parts.keySet().contains(Part.GENOTYPE)) {
-        items.add(new Item(Part.GENOTYPE.toString().toLowerCase(), individual.getGenotype(), parts.get(Part.GENOTYPE)));
+    public BestPrinter(Map<Part, String> parts) {
+        super(individual -> {
+            List<Item> items = new ArrayList<>();
+            if (parts.keySet().contains(Part.GENOTYPE)) {
+                items.add(new Item(Part.GENOTYPE.toString().toLowerCase(), individual.getGenotype(), parts.get(Part.GENOTYPE)));
       }
       if (parts.keySet().contains(Part.SOLUTION)) {
         items.add(new Item(Part.SOLUTION.toString().toLowerCase(), individual.getSolution(), parts.get(Part.SOLUTION)));

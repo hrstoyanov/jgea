@@ -29,17 +29,17 @@ import java.util.function.Function;
  * @created 2020/06/17
  * @project jgea
  */
-public class FunctionOfFirsts<G, S, F> implements DataCollector<G, S, F> {
+public class FunctionOfFirsts<G, S, F extends Comparable<? super F>> implements DataCollector<G, S, F> {
 
-  private final Function<Collection<Individual<? extends G, ? extends S, ? extends F>>, List<Item>> function;
+    private final Function<Collection<Individual<G, S, F>>, List<Item>> function;
 
-  public FunctionOfFirsts(Function<Collection<Individual<? extends G, ? extends S, ? extends F>>, List<Item>> function) {
-    this.function = function;
-  }
+    public FunctionOfFirsts(Function<Collection<Individual<G, S, F>>, List<Item>> function) {
+        this.function = function;
+    }
 
-  @Override
-  public List<Item> collect(Event<? extends G, ? extends S, ? extends F> event) {
-    Collection<Individual<? extends G, ? extends S, ? extends F>> firsts = new ArrayList<>(event.getOrderedPopulation().firsts());
-    return function.apply(firsts);
-  }
+    @Override
+    public List<Item> collect(Event<G, S, F> event) {
+        Collection<Individual<G, S, F>> firsts = new ArrayList<>(event.getOrderedPopulation().firsts());
+        return function.apply(firsts);
+    }
 }

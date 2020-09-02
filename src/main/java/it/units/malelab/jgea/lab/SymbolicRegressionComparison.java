@@ -43,7 +43,6 @@ import it.units.malelab.jgea.problem.symbolicregression.element.Variable;
 import it.units.malelab.jgea.representation.grammar.cfggp.GrammarBasedSubtreeMutation;
 import it.units.malelab.jgea.representation.grammar.cfggp.GrammarRampedHalfAndHalf;
 import it.units.malelab.jgea.representation.graph.*;
-import it.units.malelab.jgea.representation.graph.Node;
 import it.units.malelab.jgea.representation.graph.numeric.Output;
 import it.units.malelab.jgea.representation.graph.numeric.functiongraph.BaseFunction;
 import it.units.malelab.jgea.representation.graph.numeric.functiongraph.FunctionGraph;
@@ -128,20 +127,20 @@ public class SymbolicRegressionComparison extends Worker {
                   IndependentFactory.picker(operators),
                   terminalFactory
               ),
-              PartialComparator.from(Double.class).comparing(Individual::getFitness),
-              nPop,
-              Map.of(
-                  new SubtreeCrossover<>(maxHeight), 0.8d,
-                  new SubtreeMutation<>(maxHeight, new GrowTreeBuilder<>(
-                      Operator.arityFunction(),
-                      IndependentFactory.picker(operators),
-                      terminalFactory
-                  )), 0.2d
-              ),
-              new Tournament(nTournament),
-              new Worst(),
-              nPop,
-              true
+                  PartialComparator.from(Double.class).comparing(Individual::getFitness),
+                  nPop,
+                  Map.of(
+                          new SubtreeCrossover<>(maxHeight), 0.8d,
+                          new SubtreeMutation<>(maxHeight, new GrowTreeBuilder<>(
+                                  Operator.arityFunction(),
+                                  IndependentFactory.picker(operators),
+                                  terminalFactory
+                          )), 0.2d
+                  ),
+                  new Tournament<>(nTournament),
+                  new Worst<>(),
+                  nPop,
+                  true
           );
         }),
         Map.entry("tree-ga-noxover", p -> {
@@ -158,19 +157,19 @@ public class SymbolicRegressionComparison extends Worker {
                   IndependentFactory.picker(operators),
                   terminalFactory
               ),
-              PartialComparator.from(Double.class).comparing(Individual::getFitness),
-              nPop,
-              Map.of(
-                  new SubtreeMutation<>(maxHeight, new GrowTreeBuilder<>(
-                      Operator.arityFunction(),
-                      IndependentFactory.picker(operators),
-                      terminalFactory
-                  )), 0.2d
-              ),
-              new Tournament(nTournament),
-              new Worst(),
-              nPop,
-              true
+                  PartialComparator.from(Double.class).comparing(Individual::getFitness),
+                  nPop,
+                  Map.of(
+                          new SubtreeMutation<>(maxHeight, new GrowTreeBuilder<>(
+                                  Operator.arityFunction(),
+                                  IndependentFactory.picker(operators),
+                                  terminalFactory
+                          )), 0.2d
+                  ),
+                  new Tournament<>(nTournament),
+                  new Worst<>(),
+                  nPop,
+                  true
           );
         }),
         Map.entry("tree-gadiv", p -> {
@@ -187,21 +186,21 @@ public class SymbolicRegressionComparison extends Worker {
                   IndependentFactory.picker(operators),
                   terminalFactory
               ),
-              PartialComparator.from(Double.class).comparing(Individual::getFitness),
-              nPop,
-              Map.of(
-                  new SubtreeCrossover<>(maxHeight), 0.8d,
-                  new SubtreeMutation<>(maxHeight, new GrowTreeBuilder<>(
-                      Operator.arityFunction(),
-                      IndependentFactory.picker(operators),
-                      terminalFactory
-                  )), 0.2d
-              ),
-              new Tournament(nTournament),
-              new Worst(),
-              nPop,
-              true,
-              diversityMaxAttempts
+                  PartialComparator.from(Double.class).comparing(Individual::getFitness),
+                  nPop,
+                  Map.of(
+                          new SubtreeCrossover<>(maxHeight), 0.8d,
+                          new SubtreeMutation<>(maxHeight, new GrowTreeBuilder<>(
+                                  Operator.arityFunction(),
+                                  IndependentFactory.picker(operators),
+                                  terminalFactory
+                          )), 0.2d
+                  ),
+                  new Tournament<>(nTournament),
+                  new Worst<>(),
+                  nPop,
+                  true,
+                  diversityMaxAttempts
           );
         }),
         Map.entry("cfgtree-ga", p -> {
@@ -211,20 +210,20 @@ public class SymbolicRegressionComparison extends Worker {
               Arrays.stream(constants).mapToObj(d -> (Double) d).collect(Collectors.toList())
           );
           return new StandardEvolver<Tree<String>, RealFunction, Double>(
-              new FormulaMapper()
-                  .andThen(n -> TreeBasedRealFunction.from(n, vars(p.arity())))
-                  .andThen(MathUtils.linearScaler((SymbolicRegressionFitness) p.getFitnessFunction())),
-              new GrammarRampedHalfAndHalf<>(6, maxHeight + 4, g),
-              PartialComparator.from(Double.class).comparing(Individual::getFitness),
-              nPop,
-              Map.of(
-                  new SameRootSubtreeCrossover<>(maxHeight + 4), 0.8d,
-                  new GrammarBasedSubtreeMutation<>(maxHeight + 4, g), 0.2d
-              ),
-              new Tournament(nTournament),
-              new Worst(),
-              nPop,
-              true
+                  new FormulaMapper()
+                          .andThen(n -> TreeBasedRealFunction.from(n, vars(p.arity())))
+                          .andThen(MathUtils.linearScaler((SymbolicRegressionFitness) p.getFitnessFunction())),
+                  new GrammarRampedHalfAndHalf<>(6, maxHeight + 4, g),
+                  PartialComparator.from(Double.class).comparing(Individual::getFitness),
+                  nPop,
+                  Map.of(
+                          new SameRootSubtreeCrossover<>(maxHeight + 4), 0.8d,
+                          new GrammarBasedSubtreeMutation<>(maxHeight + 4, g), 0.2d
+                  ),
+                  new Tournament<>(nTournament),
+                  new Worst<>(),
+                  nPop,
+                  true
           );
         }),
         Map.entry("cfgtree-ga-noxover", p -> {
@@ -234,19 +233,19 @@ public class SymbolicRegressionComparison extends Worker {
               Arrays.stream(constants).mapToObj(d -> (Double) d).collect(Collectors.toList())
           );
           return new StandardEvolver<Tree<String>, RealFunction, Double>(
-              new FormulaMapper()
-                  .andThen(n -> TreeBasedRealFunction.from(n, vars(p.arity())))
-                  .andThen(MathUtils.linearScaler((SymbolicRegressionFitness) p.getFitnessFunction())),
-              new GrammarRampedHalfAndHalf<>(6, maxHeight + 4, g),
-              PartialComparator.from(Double.class).comparing(Individual::getFitness),
-              nPop,
-              Map.of(
-                  new GrammarBasedSubtreeMutation<>(maxHeight + 4, g), 0.2d
-              ),
-              new Tournament(nTournament),
-              new Worst(),
-              nPop,
-              true
+                  new FormulaMapper()
+                          .andThen(n -> TreeBasedRealFunction.from(n, vars(p.arity())))
+                          .andThen(MathUtils.linearScaler((SymbolicRegressionFitness) p.getFitnessFunction())),
+                  new GrammarRampedHalfAndHalf<>(6, maxHeight + 4, g),
+                  PartialComparator.from(Double.class).comparing(Individual::getFitness),
+                  nPop,
+                  Map.of(
+                          new GrammarBasedSubtreeMutation<>(maxHeight + 4, g), 0.2d
+                  ),
+                  new Tournament<>(nTournament),
+                  new Worst<>(),
+                  nPop,
+                  true
           );
         }),
         Map.entry("cfgtree-gadiv", p -> {
@@ -256,21 +255,21 @@ public class SymbolicRegressionComparison extends Worker {
               Arrays.stream(constants).mapToObj(d -> (Double) d).collect(Collectors.toList())
           );
           return new StandardWithEnforcedDiversityEvolver<Tree<String>, RealFunction, Double>(
-              new FormulaMapper()
-                  .andThen(n -> TreeBasedRealFunction.from(n, vars(p.arity())))
-                  .andThen(MathUtils.linearScaler((SymbolicRegressionFitness) p.getFitnessFunction())),
-              new GrammarRampedHalfAndHalf<>(6, maxHeight + 4, g),
-              PartialComparator.from(Double.class).comparing(Individual::getFitness),
-              nPop,
-              Map.of(
-                  new SameRootSubtreeCrossover<>(maxHeight + 4), 0.8d,
-                  new GrammarBasedSubtreeMutation<>(maxHeight + 4, g), 0.2d
-              ),
-              new Tournament(nTournament),
-              new Worst(),
-              nPop,
-              true,
-              diversityMaxAttempts
+                  new FormulaMapper()
+                          .andThen(n -> TreeBasedRealFunction.from(n, vars(p.arity())))
+                          .andThen(MathUtils.linearScaler((SymbolicRegressionFitness) p.getFitnessFunction())),
+                  new GrammarRampedHalfAndHalf<>(6, maxHeight + 4, g),
+                  PartialComparator.from(Double.class).comparing(Individual::getFitness),
+                  nPop,
+                  Map.of(
+                          new SameRootSubtreeCrossover<>(maxHeight + 4), 0.8d,
+                          new GrammarBasedSubtreeMutation<>(maxHeight + 4, g), 0.2d
+                  ),
+                  new Tournament<>(nTournament),
+                  new Worst<>(),
+                  nPop,
+                  true,
+                  diversityMaxAttempts
           );
         }),
         Map.entry("fgraph-lim-ga", p -> new StandardEvolver<Graph<Node, Double>, RealFunction, Double>(
@@ -286,19 +285,19 @@ public class SymbolicRegressionComparison extends Worker {
                     (w, r) -> w,
                     (w, r) -> r.nextGaussian()
                 ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
-                new AlignedCrossover<>(
-                    (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
-                    node -> node instanceof Output,
-                    false
-                ), graphCrossoverRate
+                    new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                    new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                    new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
+                    new AlignedCrossover<>(
+                            (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
+                            node -> node instanceof Output,
+                            false
+                    ), graphCrossoverRate
             ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true
         )),
         Map.entry("fgraph-lim-ga-noxover", p -> new StandardEvolver<Graph<Node, Double>, RealFunction, Double>(
             FunctionGraph.builder()
@@ -307,20 +306,20 @@ public class SymbolicRegressionComparison extends Worker {
             new ShallowSparseFactory(0d, 0d, 1d, p.arity(), 1),
             PartialComparator.from(Double.class).comparing(Individual::getFitness),
             nPop,
-            Map.of(
-                new NodeAddition<>(
-                    FunctionNode.limitedIndexFactory(maxNodes, baseFunctions),
-                    (w, r) -> w,
-                    (w, r) -> r.nextGaussian()
-                ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate
-            ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true
+                Map.of(
+                        new NodeAddition<>(
+                                FunctionNode.limitedIndexFactory(maxNodes, baseFunctions),
+                                (w, r) -> w,
+                                (w, r) -> r.nextGaussian()
+                        ), graphNodeAdditionRate,
+                        new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                        new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                        new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate
+                ),
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true
         )),
         Map.entry("fgraph-lim-gadiv", p -> new StandardWithEnforcedDiversityEvolver<Graph<Node, Double>, RealFunction, Double>(
             FunctionGraph.builder()
@@ -335,20 +334,20 @@ public class SymbolicRegressionComparison extends Worker {
                     (w, r) -> w,
                     (w, r) -> r.nextGaussian()
                 ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
-                new AlignedCrossover<>(
-                    (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
-                    node -> node instanceof Output,
-                    false
-                ), graphCrossoverRate
+                    new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                    new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                    new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
+                    new AlignedCrossover<>(
+                            (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
+                            node -> node instanceof Output,
+                            false
+                    ), graphCrossoverRate
             ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true,
-            diversityMaxAttempts
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true,
+                diversityMaxAttempts
         )),
         Map.entry("fgraph-lim-speciated", p -> new SpeciatedEvolver<Graph<Node, Double>, RealFunction, Double>(
             FunctionGraph.builder()
@@ -437,19 +436,19 @@ public class SymbolicRegressionComparison extends Worker {
                     (w, r) -> w,
                     (w, r) -> r.nextGaussian()
                 ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
-                new AlignedCrossover<>(
-                    (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
-                    node -> node instanceof Output,
-                    false
-                ), graphCrossoverRate
+                    new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                    new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                    new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
+                    new AlignedCrossover<>(
+                            (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
+                            node -> node instanceof Output,
+                            false
+                    ), graphCrossoverRate
             ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true
         )),
         Map.entry("ograph-seq-ga", p -> new StandardEvolver<Graph<Node, OperatorGraph.NonValuedArc>, RealFunction, Double>(
             OperatorGraph.builder()
@@ -462,20 +461,20 @@ public class SymbolicRegressionComparison extends Worker {
                 new NodeAddition<Node, OperatorGraph.NonValuedArc>(
                     OperatorNode.sequentialIndexFactory(baseOperators),
                     Mutation.copy(),
-                    Mutation.copy()
+                        Mutation.copy()
                 ).withChecker(OperatorGraph.checker()), graphNodeAdditionRate,
-                new ArcAddition<Node, OperatorGraph.NonValuedArc>(r -> OperatorGraph.NON_VALUED_ARC, false).withChecker(OperatorGraph.checker()), graphEdgeAdditionRate,
-                new ArcRemoval<Node, OperatorGraph.NonValuedArc>(node -> node instanceof Output).withChecker(OperatorGraph.checker()), graphEdgeRemovalRate,
-                new AlignedCrossover<Node, OperatorGraph.NonValuedArc>(
-                    Crossover.randomCopy(),
-                    node -> node instanceof Output,
-                    false
-                ).withChecker(OperatorGraph.checker()), graphCrossoverRate
+                    new ArcAddition<Node, OperatorGraph.NonValuedArc>(r -> OperatorGraph.NON_VALUED_ARC, false).withChecker(OperatorGraph.checker()), graphEdgeAdditionRate,
+                    new ArcRemoval<Node, OperatorGraph.NonValuedArc>(node -> node instanceof Output).withChecker(OperatorGraph.checker()), graphEdgeRemovalRate,
+                    new AlignedCrossover<Node, OperatorGraph.NonValuedArc>(
+                            Crossover.randomCopy(),
+                            node -> node instanceof Output,
+                            false
+                    ).withChecker(OperatorGraph.checker()), graphCrossoverRate
             ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true
         )),
         Map.entry("fgraph-hash-ga", p -> new StandardEvolver<Graph<IndexedNode<Node>, Double>, RealFunction, Double>(
             GraphUtils.mapper((Function<IndexedNode<Node>, Node>) IndexedNode::content, (Function<Collection<Double>, Double>) Misc::first)
@@ -493,19 +492,19 @@ public class SymbolicRegressionComparison extends Worker {
                     (w, r) -> w,
                     (w, r) -> r.nextGaussian()
                 ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node.content() instanceof Output), graphEdgeRemovalRate,
-                new AlignedCrossover<>(
-                    (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
-                    node -> node.content() instanceof Output,
-                    false
-                ), graphCrossoverRate
+                    new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                    new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                    new ArcRemoval<>(node -> node.content() instanceof Output), graphEdgeRemovalRate,
+                    new AlignedCrossover<>(
+                            (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
+                            node -> node.content() instanceof Output,
+                            false
+                    ), graphCrossoverRate
             ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true
         )),
         Map.entry("fgraph-hash-speciated", p -> new SpeciatedEvolver<Graph<IndexedNode<Node>, Double>, RealFunction, Double>(
             GraphUtils.mapper((Function<IndexedNode<Node>, Node>) IndexedNode::content, (Function<Collection<Double>, Double>) Misc::first)
@@ -678,20 +677,20 @@ public class SymbolicRegressionComparison extends Worker {
             new ShallowSparseFactory(0d, 0d, 1d, p.arity(), 1),
             PartialComparator.from(Double.class).comparing(Individual::getFitness),
             nPop,
-            Map.of(
-                new NodeAddition<>(
-                    FunctionNode.sequentialIndexFactory(baseFunctions),
-                    (w, r) -> w,
-                    (w, r) -> r.nextGaussian()
-                ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate
-            ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true
+                Map.of(
+                        new NodeAddition<>(
+                                FunctionNode.sequentialIndexFactory(baseFunctions),
+                                (w, r) -> w,
+                                (w, r) -> r.nextGaussian()
+                        ), graphNodeAdditionRate,
+                        new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                        new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                        new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate
+                ),
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true
         )),
         Map.entry("fgraph-seq-gadiv", p -> new StandardWithEnforcedDiversityEvolver<Graph<Node, Double>, RealFunction, Double>(
             FunctionGraph.builder()
@@ -706,20 +705,20 @@ public class SymbolicRegressionComparison extends Worker {
                     (w, r) -> w,
                     (w, r) -> r.nextGaussian()
                 ), graphNodeAdditionRate,
-                new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
-                new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
-                new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
-                new AlignedCrossover<>(
-                    (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
-                    node -> node instanceof Output,
-                    false
-                ), graphCrossoverRate
+                    new ArcModification<>((w, r) -> w + r.nextGaussian(), 1d), graphEdgeMutationRate,
+                    new ArcAddition<>(Random::nextGaussian, false), graphEdgeAdditionRate,
+                    new ArcRemoval<>(node -> node instanceof Output), graphEdgeRemovalRate,
+                    new AlignedCrossover<>(
+                            (w1, w2, r) -> w1 + (w2 - w1) * (r.nextDouble() * 3d - 1d),
+                            node -> node instanceof Output,
+                            false
+                    ), graphCrossoverRate
             ),
-            new Tournament(nTournament),
-            new Worst(),
-            nPop,
-            true,
-            diversityMaxAttempts
+                new Tournament<>(nTournament),
+                new Worst<>(),
+                nPop,
+                true,
+                diversityMaxAttempts
         ))
     ));
     //filter evolvers
@@ -740,17 +739,17 @@ public class SymbolicRegressionComparison extends Worker {
               "evolver", evolverEntry.getKey()
           ));
           try {
-            List<DataCollector<?, ? super RealFunction, ? super Double>> collectors = List.of(new Static(keys),
-                new Basic(),
-                new Population(),
-                new Diversity(),
-                new BestInfo("%7.5f"),
-                new FunctionOfOneBest<>(i -> List.of(new Item(
-                    "validation.fitness",
-                    problem.getValidationFunction().apply(i.getSolution()),
-                    "%7.5f"
-                ))),
-                new BestPrinter(BestPrinter.Part.SOLUTION, "%80.80s")
+              List<DataCollector> collectors = List.of(new Static(keys),
+                      new Basic(),
+                      new Population(),
+                      new Diversity(),
+                      new BestInfo("%7.5f"),
+                      new FunctionOfOneBest<Object, RealFunction, Double>(i -> List.of(new Item(
+                              "validation.fitness",
+                              problem.getValidationFunction().apply(i.getSolution()),
+                              "%7.5f"
+                      ))),
+                      new BestPrinter(BestPrinter.Part.SOLUTION, "%80.80s")
             );
             Stopwatch stopwatch = Stopwatch.createStarted();
             Evolver<?, RealFunction, Double> evolver = evolverEntry.getValue().apply(problem);

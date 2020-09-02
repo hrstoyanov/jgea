@@ -24,20 +24,20 @@ import java.util.List;
 /**
  * @author eric
  */
-public class Population implements DataCollector<Object, Object, Object> {
+public class Population implements DataCollector<Object, Object, Comparable<Object>> {
 
-  @Override
-  public List<Item> collect(Event<?, ?, ?> event) {
-    double genoCount = 0;
-    double solutionCount = 0;
-    double genoSizeSum = 0;
-    double solutionSizeSum = 0;
-    double ageSum = 0;
-    double count = 0;
-    for (Individual<?, ?, ?> individual : event.getOrderedPopulation().all()) {
-      Integer genoSize = IndividualBasicInfo.size(individual.getGenotype());
-      if (genoSize != null) {
-        genoSizeSum = genoSizeSum + genoSize;
+    @Override
+    public List<Item> collect(Event<Object, Object, Comparable<Object>> event) {
+        double genoCount = 0;
+        double solutionCount = 0;
+        double genoSizeSum = 0;
+        double solutionSizeSum = 0;
+        double ageSum = 0;
+        double count = 0;
+        for (Individual<?, ?, ?> individual : event.getOrderedPopulation().all()) {
+            Integer genoSize = IndividualBasicInfo.size(individual.getGenotype());
+            if (genoSize != null) {
+                genoSizeSum = genoSizeSum + genoSize;
         genoCount = genoCount + 1;
       }
       Integer solutionSize = IndividualBasicInfo.size(individual.getSolution());

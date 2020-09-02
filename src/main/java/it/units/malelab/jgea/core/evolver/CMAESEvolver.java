@@ -179,11 +179,11 @@ public class CMAESEvolver<S, F extends Comparable<F>> extends AbstractIterativeE
    * Constructs a new CMA-ES instance using default parameters.
    */
   public CMAESEvolver(
-      Function<? super List<Double>, ? extends S> solutionMapper,
-      Factory<? extends List<Double>> genotypeFactory,
-      PartialComparator<? super Individual<List<Double>, S, F>> individualComparator,
-      double initMin,
-      double initMax) {
+          Function<List<Double>, S> solutionMapper,
+          Factory<List<Double>> genotypeFactory,
+          PartialComparator<Individual<List<Double>, S, F>> individualComparator,
+          double initMin,
+          double initMax) {
     super(solutionMapper, genotypeFactory, individualComparator);
     this.size = genotypeFactory.build(1, new Random(0)).get(0).size();
     this.initMin = initMin;

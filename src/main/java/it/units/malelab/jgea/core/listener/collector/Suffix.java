@@ -24,21 +24,21 @@ import java.util.stream.Collectors;
 /**
  * @author eric
  */
-public class Suffix<G, S, F> implements DataCollector<G, S, F> {
+public class Suffix<G, S, F extends Comparable<? super F>> implements DataCollector<G, S, F> {
 
-  private final String suffix;
-  private final DataCollector<G, S, F> collector;
+    private final String suffix;
+    private final DataCollector<G, S, F> collector;
 
-  public Suffix(String suffix, DataCollector<G, S, F> collector) {
-    this.suffix = suffix;
-    this.collector = collector;
-  }
+    public Suffix(String suffix, DataCollector<G, S, F> collector) {
+        this.suffix = suffix;
+        this.collector = collector;
+    }
 
-  @Override
-  public List<Item> collect(Event<? extends G, ? extends S, ? extends F> event) {
-    return collector.collect(event).stream()
-        .map(i -> i.suffixed(suffix))
-        .collect(Collectors.toList());
-  }
+    @Override
+    public List<Item> collect(Event<G, S, F> event) {
+        return collector.collect(event).stream()
+                .map(i -> i.suffixed(suffix))
+                .collect(Collectors.toList());
+    }
 
 }

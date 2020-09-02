@@ -24,16 +24,16 @@ import java.util.List;
 /**
  * @author eric
  */
-public class Basic implements DataCollector<Object, Object, Object> {
+public class Basic<G, S, F extends Comparable<? super F>> implements DataCollector<G, S, F> {
 
-  @Override
-  public List<Item> collect(Event<?, ?, ?> event) {
-    return Arrays.asList(
-        new Item("iterations", event.getState().getIterations(), "%4d"),
-        new Item("births", event.getState().getBirths(), "%8d"),
-        new Item("fitness.evaluations", event.getState().getFitnessEvaluations(), "%6d"),
-        new Item("elapsed.sec", (double) event.getState().getElapsedMillis() / 1000d, "%6.1f")
-    );
-  }
+    @Override
+    public List<Item> collect(Event<G, S, F> event) {
+        return Arrays.asList(
+                new Item("iterations", event.getState().getIterations(), "%4d"),
+                new Item("births", event.getState().getBirths(), "%8d"),
+                new Item("fitness.evaluations", event.getState().getFitnessEvaluations(), "%6d"),
+                new Item("elapsed.sec", (double) event.getState().getElapsedMillis() / 1000d, "%6.1f")
+        );
+    }
 
 }

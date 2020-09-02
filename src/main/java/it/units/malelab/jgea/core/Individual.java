@@ -19,22 +19,21 @@ package it.units.malelab.jgea.core;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * @author eric
  */
-public class Individual<G, S, F> implements Serializable {
+public class Individual<G, S, F extends Comparable<? super F>> implements Serializable {
 
-  private final G genotype;
-  private final S solution;
-  private final F fitness;
-  private final int birthIteration;
+    private final G genotype;
+    private final S solution;
+    private final F fitness;
+    private final int birthIteration;
 
-  public Individual(G genotype, S solution, F fitness, int birthIteration) {
-    this.genotype = genotype;
-    this.solution = solution;
-    this.fitness = fitness;
+    public Individual(G genotype, S solution, F fitness, int birthIteration) {
+        this.genotype = genotype;
+        this.solution = solution;
+        this.fitness = fitness;
     this.birthIteration = birthIteration;
   }
 

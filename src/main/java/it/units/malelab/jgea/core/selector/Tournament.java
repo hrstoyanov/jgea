@@ -16,6 +16,7 @@
 
 package it.units.malelab.jgea.core.selector;
 
+import it.units.malelab.jgea.core.Individual;
 import it.units.malelab.jgea.core.order.DAGPartiallyOrderedCollection;
 import it.units.malelab.jgea.core.order.PartiallyOrderedCollection;
 import it.units.malelab.jgea.core.util.Misc;
@@ -27,26 +28,26 @@ import java.util.Random;
 /**
  * @author eric
  */
-public class Tournament implements Selector<Object> {
+public class Tournament<G, S, F extends Comparable<? super F>> implements Selector<Individual<G, S, F>> {
 
-  private final int size;
+    private final int size;
 
-  public Tournament(int size) {
-    this.size = size;
-  }
-
-  @Override
-  public <K extends Object> K select(PartiallyOrderedCollection<K> ks, Random random) {
-    Collection<K> all = ks.all();
-    Collection<K> tournament = new ArrayList<>();
-    for (int i = 0; i < size; i++) {
-      tournament.add(Misc.pickRandomly(all, random));
+    public Tournament(int size) {
+        this.size = size;
     }
-    if (ks instanceof DAGPartiallyOrderedCollection) {
-      PartiallyOrderedCollection<K> poTournament = new DAGPartiallyOrderedCollection<>(tournament, ((DAGPartiallyOrderedCollection<K>) ks).getPartialComparator());
-      tournament.clear();
-      tournament.addAll(poTournament.firsts());
-    }
+
+    @Override
+    public <K extends Individual<G, S, F>> K select(PartiallyOrderedCollection<K> ks, Random random) {
+        Collection<K> all = ks.all();
+        Collection<K> tournament = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            tournament.add(Misc.pickRandomly(all, random));
+        }
+        if (ks instanceof DAGPartiallyOrderedCollection) {
+            PartiallyOrderedCollection<K> poTournament = new DAGPartiallyOrderedCollection<>(tournament, ((DAGPartiallyOrderedCollection<K>) ks).getPartialComparator());
+            tournament.clear();
+            tournament.addAll(poTournament.firsts());
+        }
     return Misc.pickRandomly(tournament, random);
   }
 

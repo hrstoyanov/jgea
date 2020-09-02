@@ -24,11 +24,7 @@ import it.units.malelab.jgea.core.order.PartiallyOrderedCollection;
 import it.units.malelab.jgea.core.selector.Selector;
 import it.units.malelab.jgea.core.util.Misc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
@@ -37,36 +33,36 @@ import java.util.stream.Collectors;
 /**
  * @author Eric Medvet <eric.medvet@gmail.com>
  */
-public class StandardWithEnforcedDiversityEvolver<G, S, F> extends StandardEvolver<G, S, F> {
+public class StandardWithEnforcedDiversityEvolver<G, S, F extends Comparable<? super F>> extends StandardEvolver<G, S, F> {
 
-  private final int maxAttempts;
+    private final int maxAttempts;
 
-  public static <G1, S1, F1> StandardWithEnforcedDiversityEvolver<G1, S1, F1> from(StandardEvolver<G1, S1, F1> evolver, int maxAttempts) {
-    return new StandardWithEnforcedDiversityEvolver<>(
-        evolver.solutionMapper,
-        evolver.genotypeFactory,
-        evolver.individualComparator,
-        evolver.populationSize,
-        evolver.operators,
-        evolver.parentSelector,
-        evolver.unsurvivalSelector,
-        evolver.offspringSize,
-        evolver.overlapping,
-        maxAttempts
+    public static <G, S, F extends Comparable<? super F>> StandardWithEnforcedDiversityEvolver<G, S, F> from(StandardEvolver<G, S, F> evolver, int maxAttempts) {
+        return new StandardWithEnforcedDiversityEvolver<G, S, F>(
+                evolver.solutionMapper,
+                evolver.genotypeFactory,
+                evolver.individualComparator,
+                evolver.populationSize,
+                evolver.operators,
+                evolver.parentSelector,
+                evolver.unsurvivalSelector,
+                evolver.offspringSize,
+                evolver.overlapping,
+                maxAttempts
     );
   }
 
   public StandardWithEnforcedDiversityEvolver(
-      Function<? super G, ? extends S> solutionMapper,
-      Factory<? extends G> genotypeFactory,
-      PartialComparator<? super Individual<G, S, F>> individualComparator,
-      int populationSize,
-      Map<GeneticOperator<G>, Double> operators,
-      Selector<? super Individual<? super G, ? super S, ? super F>> parentSelector,
-      Selector<? super Individual<? super G, ? super S, ? super F>> unsurvivalSelector,
-      int offspringSize,
-      boolean overlapping,
-      int maxAttempts) {
+          Function<G, S> solutionMapper,
+          Factory<G> genotypeFactory,
+          PartialComparator<Individual<G, S, F>> individualComparator,
+          int populationSize,
+          Map<GeneticOperator<G>, Double> operators,
+          Selector<Individual<G, S, F>> parentSelector,
+          Selector<Individual<G, S, F>> unsurvivalSelector,
+          int offspringSize,
+          boolean overlapping,
+          int maxAttempts) {
     super(solutionMapper, genotypeFactory, individualComparator, populationSize, operators, parentSelector, unsurvivalSelector, offspringSize, overlapping);
     this.maxAttempts = maxAttempts;
   }

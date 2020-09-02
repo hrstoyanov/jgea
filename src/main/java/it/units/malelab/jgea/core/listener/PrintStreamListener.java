@@ -21,87 +21,82 @@
  */
 package it.units.malelab.jgea.core.listener;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.IllegalFormatException;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import it.units.malelab.jgea.core.listener.collector.DataCollector;
 import it.units.malelab.jgea.core.listener.collector.Item;
 
+import java.io.PrintStream;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * @author eric
  */
-public class PrintStreamListener<G, S, F> implements Listener<G, S, F> {
+public class PrintStreamListener<G, S, F extends Comparable<? super F>> implements Listener<G, S, F> {
 
-  private final PrintStream ps;
-  private final boolean format;
-  private final int headerInterval;
-  private final String innerSeparator;
-  private final String outerSeparator;
-  private final List<DataCollector<? super G, ? super S, ? super F>> collectors;
+    private final PrintStream ps;
+    private final boolean format;
+    private final int headerInterval;
+    private final String innerSeparator;
+    private final String outerSeparator;
+    private final List<DataCollector<G, S, F>> collectors;
 
-  private final List<List<Item>> firstItems;
-  private final List<List<Integer>> sizes;
+    private final List<List<Item>> firstItems;
+    private final List<List<Integer>> sizes;
   private int lines;
 
   private final static Logger L = Logger.getLogger(PrintStreamListener.class.getName());
 
-  public PrintStreamListener(
-      PrintStream ps,
-      boolean format,
-      int headerInterval,
-      String innerSeparator,
-      String outerSeparator,
-      DataCollector<? super G, ? super S, ? super F>... collectors) {
-    this.ps = ps;
-    this.format = format;
-    this.headerInterval = headerInterval;
-    this.innerSeparator = innerSeparator;
-    this.outerSeparator = outerSeparator;
-    this.collectors = Arrays.asList(collectors);
-    firstItems = new ArrayList<>();
-    sizes = new ArrayList<>();
-    lines = 0;
-  }
-
-  @Override
-  public void listen(Event<? extends G, ? extends S, ? extends F> event) {
-    //collect items
-    List<List<Item>> items = collectItems(event);
-    //possibly print headers
-    if ((lines == 0) || ((headerInterval > 0) && (event.getState().getIterations() % headerInterval == 0))) {
-      String headers = buildHeadersString();
-      synchronized (ps) {
-        ps.println(headers);
-      }
+    public PrintStreamListener(
+            PrintStream ps,
+            boolean format,
+            int headerInterval,
+            String innerSeparator,
+            String outerSeparator,
+            DataCollector<G, S, F>... collectors) {
+        this.ps = ps;
+        this.format = format;
+        this.headerInterval = headerInterval;
+        this.innerSeparator = innerSeparator;
+        this.outerSeparator = outerSeparator;
+        this.collectors = Arrays.asList(collectors);
+        firstItems = new ArrayList<>();
+        sizes = new ArrayList<>();
+        lines = 0;
     }
-    //print values: collectors
+
+    @Override
+    public void listen(Event<G, S, F> event) {
+        //collect items
+        List<List<Item>> items = collectItems(event);
+        //possibly print headers
+        if ((lines == 0) || ((headerInterval > 0) && (event.getState().getIterations() % headerInterval == 0))) {
+            String headers = buildHeadersString();
+            synchronized (ps) {
+                ps.println(headers);
+            }
+        }
+        //print values: collectors
     String data = buildDataString(items);
     synchronized (ps) {
       ps.println(data);
     }
   }
 
-  protected List<List<Item>> collectItems(final Event<? extends G, ? extends S, ? extends F> event) {
-    List<List<Item>> items = new ArrayList<>();
-    //collect
-    for (DataCollector<? super G, ? super S, ? super F> collector : collectors) {
-      try {
-        items.add(collector.collect(event));
-      } catch (Throwable t) {
-        L.log(Level.WARNING, String.format("Cannot collect from %s due to %s", collector.getClass().getSimpleName(), t), t);
-      }
-    }
-    if (firstItems.isEmpty()) {
+    protected List<List<Item>> collectItems(final Event<G, S, F> event) {
+        List<List<Item>> items = new ArrayList<>();
+        //collect
+        for (DataCollector<G, S, F> collector : collectors) {
+            try {
+                items.add(collector.collect(event));
+            } catch (Throwable t) {
+                L.log(Level.WARNING, String.format("Cannot collect from %s due to %s", collector.getClass().getSimpleName(), t), t);
+            }
+        }
+        if (firstItems.isEmpty()) {
       firstItems.addAll(items);
       sizes.addAll(firstItems.stream()
           .map(is -> is.stream().map(

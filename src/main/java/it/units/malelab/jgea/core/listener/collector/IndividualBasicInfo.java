@@ -18,9 +18,9 @@ package it.units.malelab.jgea.core.listener.collector;
 
 import com.google.common.graph.ValueGraph;
 import it.units.malelab.jgea.core.Individual;
-import it.units.malelab.jgea.core.util.Sized;
 import it.units.malelab.jgea.core.util.Misc;
 import it.units.malelab.jgea.core.util.Pair;
+import it.units.malelab.jgea.core.util.Sized;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,25 +30,25 @@ import java.util.function.Function;
 /**
  * @author Eric Medvet <eric.medvet@gmail.com>
  */
-public class IndividualBasicInfo<F> implements Function<Individual<? extends Object, ? extends Object, ? extends F>, List<Item>> {
+public class IndividualBasicInfo<G, S, F extends Comparable<? super F>> implements Function<Individual<G, S, F>, List<Item>> {
 
-  private final Function<? super F, List<Item>> fitnessSplitter;
+    private final Function<? super F, List<Item>> fitnessSplitter;
 
-  public IndividualBasicInfo(Function<? super F, List<Item>> fitnessSplitter) {
-    this.fitnessSplitter = fitnessSplitter;
-  }
-
-  @Override
-  public List<Item> apply(Individual<? extends Object, ? extends Object, ? extends F> individual) {
-    List<Item> items = new ArrayList<>();
-    items.add(new Item("genotype.size", size(individual.getGenotype()), "%4d"));
-    items.add(new Item("solution.size", size(individual.getSolution()), "%4d"));
-    items.add(new Item("birth.iteration", individual.getBirthIteration(), "%3d"));
-    for (Item fitnessItem : fitnessSplitter.apply(individual.getFitness())) {
-      items.add(fitnessItem.prefixed("fitness"));
+    public IndividualBasicInfo(Function<? super F, List<Item>> fitnessSplitter) {
+        this.fitnessSplitter = fitnessSplitter;
     }
-    return items;
-  }
+
+    @Override
+    public List<Item> apply(Individual<G, S, F> individual) {
+        List<Item> items = new ArrayList<>();
+        items.add(new Item("genotype.size", size(individual.getGenotype()), "%4d"));
+        items.add(new Item("solution.size", size(individual.getSolution()), "%4d"));
+        items.add(new Item("birth.iteration", individual.getBirthIteration(), "%3d"));
+        for (Item fitnessItem : fitnessSplitter.apply(individual.getFitness())) {
+            items.add(fitnessItem.prefixed("fitness"));
+        }
+        return items;
+    }
 
   public static Integer size(Object o) {
     if (o instanceof Sized) {

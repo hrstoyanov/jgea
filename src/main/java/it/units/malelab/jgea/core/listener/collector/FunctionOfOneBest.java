@@ -17,10 +17,7 @@
 package it.units.malelab.jgea.core.listener.collector;
 
 import it.units.malelab.jgea.core.Individual;
-import it.units.malelab.jgea.core.listener.Event;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -29,9 +26,9 @@ import java.util.function.Function;
  * @created 2020/06/17
  * @project jgea
  */
-public class FunctionOfOneBest<G, S, F> extends Prefix<G, S, F> {
+public class FunctionOfOneBest<G, S, F extends Comparable<? super F>> extends Prefix<G, S, F> {
 
-  public FunctionOfOneBest(Function<Individual<? extends G, ? extends S, ? extends F>, List<Item>> function) {
-    super("best", new FunctionOfFirsts<>(firsts -> function.apply(firsts.iterator().next())));
-  }
+    public FunctionOfOneBest(Function<Individual<G, S, F>, List<Item>> function) {
+        super("best", new FunctionOfFirsts<>(firsts -> function.apply(firsts.iterator().next())));
+    }
 }

@@ -18,8 +18,6 @@ package it.units.malelab.jgea.core.evolver;
 
 import it.units.malelab.jgea.core.Factory;
 import it.units.malelab.jgea.core.Individual;
-import it.units.malelab.jgea.core.order.DAGPartiallyOrderedCollection;
-import it.units.malelab.jgea.core.Problem;
 import it.units.malelab.jgea.core.operator.Mutation;
 import it.units.malelab.jgea.core.order.PartialComparator;
 import it.units.malelab.jgea.core.order.PartiallyOrderedCollection;
@@ -36,17 +34,17 @@ import java.util.function.Function;
  * @created 2020/06/16
  * @project jgea
  */
-public class RandomWalk<G, S, F> extends AbstractIterativeEvolver<G, S, F> {
+public class RandomWalk<G, S, F extends Comparable<? super F>> extends AbstractIterativeEvolver<G, S, F> {
 
-  private final Mutation<G> mutation;
+    private final Mutation<G> mutation;
 
-  public RandomWalk(
-      Function<? super G, ? extends S> solutionMapper,
-      Factory<? extends G> genotypeFactory,
-      PartialComparator<? super Individual<G, S, F>> individualComparator,
-      Mutation<G> mutation) {
-    super(solutionMapper, genotypeFactory, individualComparator);
-    this.mutation = mutation;
+    public RandomWalk(
+            Function<G, S> solutionMapper,
+            Factory<G> genotypeFactory,
+            PartialComparator<Individual<G, S, F>> individualComparator,
+            Mutation<G> mutation) {
+        super(solutionMapper, genotypeFactory, individualComparator);
+        this.mutation = mutation;
   }
 
   @Override

@@ -23,17 +23,17 @@ import java.util.List;
 /**
  * @author eric
  */
-public class BestInfo extends FunctionOfOneBest<Object, Object, Object> {
+public class BestInfo extends FunctionOfOneBest<Object, Object, Comparable<Object>> {
 
-  public BestInfo(String... fitnessFormats) {
-    super(new IndividualBasicInfo<>(f -> {
-      List<Item> items = new ArrayList<>();
-      if (f instanceof List<?>) {
-        for (int i = 0; i < ((List<?>) f).size(); i++) {
-          items.add(new Item(
-              "objective." + i,
-              ((List<?>) f).get(i),
-              fitnessFormats.length > 0 ? fitnessFormats[i % fitnessFormats.length] : "%s"
+    public BestInfo(String... fitnessFormats) {
+        super(new IndividualBasicInfo<>(f -> {
+            List<Item> items = new ArrayList<>();
+            if (f instanceof List<?>) {
+                for (int i = 0; i < ((List<?>) f).size(); i++) {
+                    items.add(new Item(
+                            "objective." + i,
+                            ((List<?>) f).get(i),
+                            fitnessFormats.length > 0 ? fitnessFormats[i % fitnessFormats.length] : "%s"
           ));
         }
       } else {

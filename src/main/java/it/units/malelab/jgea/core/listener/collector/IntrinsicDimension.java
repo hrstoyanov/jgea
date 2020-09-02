@@ -19,42 +19,37 @@ package it.units.malelab.jgea.core.listener.collector;
 import it.units.malelab.jgea.core.Individual;
 import it.units.malelab.jgea.core.listener.Event;
 import it.units.malelab.jgea.distance.Distance;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 /**
  * @author eric
  */
-public class IntrinsicDimension<G> implements DataCollector<G, Object, Object> {
+public class IntrinsicDimension<G> implements DataCollector<G, Object, Comparable<Object>> {
 
-  private final Distance<G> distance;
-  private final boolean dropDuplicates;
+    private final Distance<G> distance;
+    private final boolean dropDuplicates;
 
-  public IntrinsicDimension(Distance<G> distance, boolean dropDuplicates) {
-    this.distance = distance;
-    this.dropDuplicates = dropDuplicates;
-  }
-
-  @Override
-  public List<Item> collect(Event<? extends G, ?, ?> event) {
-    List<G> genotypes = event.getOrderedPopulation().all().stream()
-        .map(Individual::getGenotype)
-        .collect(Collectors.toList());
-    if (dropDuplicates) {
-      genotypes = new ArrayList<>(new LinkedHashSet<>(genotypes));
+    public IntrinsicDimension(Distance<G> distance, boolean dropDuplicates) {
+        this.distance = distance;
+        this.dropDuplicates = dropDuplicates;
     }
-    //compute distance matrix
-    double[][] dMatrix = new double[genotypes.size()][genotypes.size()];
-    for (int i1 = 0; i1 < genotypes.size(); i1++) {
-      for (int i2 = i1 + 1; i2 < genotypes.size(); i2++) {
+
+    @Override
+    public List<Item> collect(Event<G, Object, Comparable<Object>> event) {
+        List<G> genotypes = event.getOrderedPopulation().all().stream()
+                .map(Individual::getGenotype)
+                .collect(Collectors.toList());
+        if (dropDuplicates) {
+            genotypes = new ArrayList<>(new LinkedHashSet<>(genotypes));
+        }
+        //compute distance matrix
+        double[][] dMatrix = new double[genotypes.size()][genotypes.size()];
+        for (int i1 = 0; i1 < genotypes.size(); i1++) {
+            for (int i2 = i1 + 1; i2 < genotypes.size(); i2++) {
         dMatrix[i1][i2] = distance.apply(genotypes.get(i1), genotypes.get(i2));
         dMatrix[i2][i1] = dMatrix[i1][i2];
       }

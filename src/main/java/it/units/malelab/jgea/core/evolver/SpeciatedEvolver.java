@@ -37,26 +37,26 @@ import java.util.stream.Collectors;
  * @created 2020/08/12
  * @project jgea
  */
-public class SpeciatedEvolver<G, S, F> extends StandardEvolver<G, S, F> {
-  private final int minSpeciesSizeForElitism;
-  private final Distance<Individual<G, S, F>> distance;
-  private final double distanceThreshold;
-  private final Function<Collection<Individual<G, S, F>>, Individual<G, S, F>> representerSelector;
-  private final double rankBase;
+public class SpeciatedEvolver<G, S, F extends Comparable<? super F>> extends StandardEvolver<G, S, F> {
+    private final int minSpeciesSizeForElitism;
+    private final Distance<Individual<G, S, F>> distance;
+    private final double distanceThreshold;
+    private final Function<Collection<Individual<G, S, F>>, Individual<G, S, F>> representerSelector;
+    private final double rankBase;
 
-  private static final Logger L = Logger.getLogger(SpeciatedEvolver.class.getName());
+    private static final Logger L = Logger.getLogger(SpeciatedEvolver.class.getName());
 
-  public SpeciatedEvolver(
-      Function<? super G, ? extends S> solutionMapper,
-      Factory<? extends G> genotypeFactory,
-      PartialComparator<? super Individual<G, S, F>> individualComparator,
-      int populationSize,
-      Map<GeneticOperator<G>, Double> operators,
-      int minSpeciesSizeForElitism,
-      Distance<Individual<G, S, F>> distance,
-      double distanceThreshold,
-      Function<Collection<Individual<G, S, F>>, Individual<G, S, F>> representerSelector,
-      double rankBase) {
+    public SpeciatedEvolver(
+            Function<G, S> solutionMapper,
+            Factory<G> genotypeFactory,
+            PartialComparator<Individual<G, S, F>> individualComparator,
+            int populationSize,
+            Map<GeneticOperator<G>, Double> operators,
+            int minSpeciesSizeForElitism,
+            Distance<Individual<G, S, F>> distance,
+            double distanceThreshold,
+            Function<Collection<Individual<G, S, F>>, Individual<G, S, F>> representerSelector,
+            double rankBase) {
     super(solutionMapper, genotypeFactory, individualComparator, populationSize, operators, null, new Worst(), populationSize, false);
     this.minSpeciesSizeForElitism = minSpeciesSizeForElitism;
     this.distance = distance;

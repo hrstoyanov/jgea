@@ -22,28 +22,28 @@ import java.util.concurrent.ExecutorService;
  * @author eric
  */
 @FunctionalInterface
-public interface Listener<G, S, F> {
+public interface Listener<G, S, F extends Comparable<? super F>> {
 
-  void listen(Event<? extends G, ? extends S, ? extends F> event);
+    void listen(Event<G, S, F> event);
 
-  static Listener<Object, Object, Object> deaf() {
-    return (Listener<Object, Object, Object>) event -> {
-    };
-  }
+    static Listener<Object, Object, Comparable<Object>> deaf() {
+        return event -> {
+        };
+    }
 
-  default Listener<G, S, F> then(Listener<? super G, ? super S, ? super F> other) {
-    return (Event<? extends G, ? extends S, ? extends F> event) -> {
-      listen(event);
-      other.listen(event);
-    };
-  }
+    default Listener<G, S, F> then(Listener<G, S, F> other) {
+        return (Event<G, S, F> event) -> {
+            listen(event);
+            other.listen(event);
+        };
+    }
 
-  static <G1, S1, F1> Listener<G1, S1, F1> onExecutor(final Listener<G1, S1, F1> listener, final ExecutorService executor) {
-    return (final Event<? extends G1, ? extends S1, ? extends F1> event) -> {
-      executor.submit(() -> {
-        listener.listen(event);
-      });
-    };
-  }
+    static <G, S, F extends Comparable<? super F>> Listener<G, S, F> onExecutor(final Listener<G, S, F> listener, final ExecutorService executor) {
+        return (final Event<G, S, F> event) -> {
+            executor.submit(() -> {
+                listener.listen(event);
+            });
+        };
+    }
 
 }

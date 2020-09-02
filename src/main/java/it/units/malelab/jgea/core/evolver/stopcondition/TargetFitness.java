@@ -23,17 +23,17 @@ import java.util.function.Predicate;
 /**
  * @author eric
  */
-public class TargetFitness<F> implements Predicate<Event<?, ?, F>> {
+public class TargetFitness<F extends Comparable<? super F>> implements Predicate<Event<?, ?, F>> {
 
-  private final F targetFitness;
+    private final F targetFitness;
 
-  public TargetFitness(F targetFitness) {
-    this.targetFitness = targetFitness;
-  }
+    public TargetFitness(F targetFitness) {
+        this.targetFitness = targetFitness;
+    }
 
-  @Override
-  public boolean test(Event<?, ?, F> event) {
-    return event.getOrderedPopulation().all().stream().anyMatch(i -> targetFitness.equals(i.getFitness()));
+    @Override
+    public boolean test(Event<?, ?, F> event) {
+        return event.getOrderedPopulation().all().stream().anyMatch(i -> targetFitness.equals(i.getFitness()));
   }
 
   @Override

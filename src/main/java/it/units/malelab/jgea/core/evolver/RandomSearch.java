@@ -18,7 +18,6 @@ package it.units.malelab.jgea.core.evolver;
 
 import it.units.malelab.jgea.core.Factory;
 import it.units.malelab.jgea.core.Individual;
-import it.units.malelab.jgea.core.order.DAGPartiallyOrderedCollection;
 import it.units.malelab.jgea.core.order.PartialComparator;
 import it.units.malelab.jgea.core.order.PartiallyOrderedCollection;
 
@@ -34,17 +33,17 @@ import java.util.function.Function;
  * @created 2020/06/16
  * @project jgea
  */
-public class RandomSearch<G, S, F> extends AbstractIterativeEvolver<G, S, F> {
+public class RandomSearch<G, S, F extends Comparable<? super F>> extends AbstractIterativeEvolver<G, S, F> {
 
-  public RandomSearch(
-      Function<? super G, ? extends S> solutionMapper,
-      Factory<? extends G> genotypeFactory,
-      PartialComparator<? super Individual<G, S, F>> individualComparator) {
-    super(solutionMapper, genotypeFactory, individualComparator);
-  }
+    public RandomSearch(
+            Function<G, S> solutionMapper,
+            Factory<G> genotypeFactory,
+            PartialComparator<Individual<G, S, F>> individualComparator) {
+        super(solutionMapper, genotypeFactory, individualComparator);
+    }
 
-  @Override
-  protected Collection<Individual<G, S, F>> initPopulation(Function<S, F> fitnessFunction, Random random, ExecutorService executor, State state) throws ExecutionException, InterruptedException {
+    @Override
+    protected Collection<Individual<G, S, F>> initPopulation(Function<S, F> fitnessFunction, Random random, ExecutorService executor, State state) throws ExecutionException, InterruptedException {
     return initPopulation(1, fitnessFunction, random, executor, state);
   }
 

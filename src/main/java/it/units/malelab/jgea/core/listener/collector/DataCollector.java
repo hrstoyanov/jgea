@@ -24,8 +24,8 @@ import java.util.List;
  * @author eric
  */
 @FunctionalInterface
-public interface DataCollector<G, S, F> {
+public interface DataCollector<G, S, F extends Comparable<? super F>> {
 
-  List<Item> collect(Event<? extends G, ? extends S, ? extends F> event);
+    List<Item> collect(Event<G, S, F> event);
 
 }

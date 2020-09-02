@@ -27,17 +27,17 @@ import java.io.Serializable;
  * @created 2020/06/16
  * @project jgea
  */
-public class Event<G, S, F> implements Serializable {
+public class Event<G, S, F extends Comparable<? super F>> implements Serializable {
 
-  private final Evolver.State state;
-  private final PartiallyOrderedCollection<Individual<G, S, F>> orderedPopulation;
+    private final Evolver.State state;
+    private final PartiallyOrderedCollection<Individual<G, S, F>> orderedPopulation;
 
-  public Event(Evolver.State state, PartiallyOrderedCollection<Individual<G, S, F>> orderedPopulation) {
-    this.state = state;
-    this.orderedPopulation = orderedPopulation;
-  }
+    public Event(Evolver.State state, PartiallyOrderedCollection<Individual<G, S, F>> orderedPopulation) {
+        this.state = state;
+        this.orderedPopulation = orderedPopulation;
+    }
 
-  public Evolver.State getState() {
+    public Evolver.State getState() {
     return state;
   }
 

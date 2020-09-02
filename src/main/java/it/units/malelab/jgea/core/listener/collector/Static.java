@@ -25,19 +25,19 @@ import java.util.stream.Collectors;
 /**
  * @author eric
  */
-public class Static implements DataCollector<Object, Object, Object> {
+public class Static implements DataCollector<Object, Object, Comparable<Object>> {
 
-  private final Map<String, ?> values;
+    private final Map<String, ?> values;
 
-  public Static(Map<String, ?> values) {
-    this.values = values;
-  }
+    public Static(Map<String, ?> values) {
+        this.values = values;
+    }
 
-  @Override
-  public List<Item> collect(Event<?, ?, ?> event) {
-    return values.entrySet().stream()
-        .map(entry -> new Item(entry.getKey(), entry.getValue(), "%" + entry.getValue().toString().length() + "." + entry.getValue().toString().length() + "s"))
-        .collect(Collectors.toList());
-  }
+    @Override
+    public List<Item> collect(Event<Object, Object, Comparable<Object>> event) {
+        return values.entrySet().stream()
+                .map(entry -> new Item(entry.getKey(), entry.getValue(), "%" + entry.getValue().toString().length() + "." + entry.getValue().toString().length() + "s"))
+                .collect(Collectors.toList());
+    }
 
 }
